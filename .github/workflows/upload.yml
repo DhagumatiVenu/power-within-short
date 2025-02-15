@@ -1,33 +1,32 @@
-name: YouTube Video Upload
+name: Run Python Script Daily
 
 on:
   schedule:
-    - cron: '0 8 * * *'  # Runs daily at 8 AM UTC
-  
+    - cron: '0 8 * * *' # Runs daily at 8 AM UTC
+  workflow_dispatch:  # Allows manual trigger
 
 jobs:
   upload:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Set Up Python
+      
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-
-      - name: Install Dependencies
+      
+      - name: Install dependencies
         run: pip install -r requirements.txt
-
-      - name: Create `client_secrets.json`
-        run: echo '${{ secrets.YOUTUBE_CREDENTIALS }}' > client_secrets.json
 
       - name: Set Environment Variables
         run: |
           echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> $GITHUB_ENV
           echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}" >> $GITHUB_ENV
 
-      - name: Run Upload Script
+      - name: Create `credentials.json`
+        run: echo '${{ secrets.YOUTUBE_CREDENTIALS }}' > credentials.json
+
+      - name: Run upload script
         run: python auto_upload.py
