@@ -9,9 +9,16 @@ import pytz
 import requests
 from titles import tags_hashtag_format, tags_comma_format
 import shutil
+import json
 
-# API credentials file
+YOUTUBE_CREDENTIALS_JSON = os.getenv("YOUTUBE_CREDENTIALS")
+
+if YOUTUBE_CREDENTIALS_JSON:
+    with open("client_secrets.json", "w") as f:
+        f.write(YOUTUBE_CREDENTIALS_JSON)
+
 CLIENT_SECRETS_FILE = "client_secrets.json"
+
 
 # Define YouTube API scopes
 SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
