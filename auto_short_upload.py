@@ -52,7 +52,7 @@ def move_video_safely(video_file):
 # For deleting the uploaded video in the upload folder.
 def delete_duplicate_video(video_file):
      os.remove(video_file)
-     send_telegram_message(f"✅ Removed {video_file} in {uideo_folder}")
+     send_telegram_message(f"✅ Removed {video_file} in {video_folder}")
 
 # Function to schedule video upload
 def schedule_upload(video_file, title, description, tags, scheduled_time):
