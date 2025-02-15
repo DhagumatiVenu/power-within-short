@@ -28,5 +28,8 @@ jobs:
       - name: Create `credentials.json`
         run: echo '${{ secrets.YOUTUBE_CREDENTIALS }}' > credentials.json
 
+      - name: Force GitHub to Use the Latest Code
+        run: git fetch --all && git reset --hard origin/main
+
       - name: Run upload script
         run: python auto_upload.py
