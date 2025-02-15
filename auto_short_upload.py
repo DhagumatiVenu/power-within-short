@@ -16,9 +16,10 @@ CLIENT_SECRETS_FILE = "client_secrets.json"
 # Define YouTube API scopes
 SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
 
-# Telegram Bot Config
-TELEGRAM_BOT_TOKEN = "7513376871:AAF6ZoG5Bc8SQF1WJruWDnDWN7o7e5SK5A0"
-TELEGRAM_CHAT_ID = "-4744121235"
+
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+
 
 # Authenticate and get credentials
 flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(CLIENT_SECRETS_FILE, SCOPES)
@@ -51,7 +52,7 @@ def move_video_safely(video_file):
 # For deleting the uploaded video in the upload folder.
 def delete_duplicate_video(video_file):
      os.remove(video_file)
-     send_telegram_message(f"✅ Removed {video_file} in {upload_folder}")
+     send_telegram_message(f"✅ Removed {video_file} in {uideo_folder}")
 
 # Function to schedule video upload
 def schedule_upload(video_file, title, description, tags, scheduled_time):
