@@ -39,6 +39,8 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A  # ✅ Stages all changes, including deleted files
-          git commit -m "Moved uploaded videos to archive"
-          git push
+          git add -A
+          git commit -m "Moved uploaded videos to archive" || echo "No changes to commit"
+          git pull --rebase origin main  # ✅ Pull latest changes to avoid conflicts
+          git push origin main
+
