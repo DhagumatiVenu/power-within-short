@@ -38,6 +38,7 @@ os.makedirs(uploaded_folder, exist_ok=True)
 # Folder for the videos to upload
 video_folder = "upload_videos"
 video_files = [f for f in os.listdir(video_folder) if f.endswith(".mp4")]
+video_file = os.path.join(video_folder, video_files[0])
 
 # Function to send Telegram notifications
 def send_telegram_message(message):
@@ -50,14 +51,19 @@ def send_telegram_message(message):
 
 # Move uploaded videos to archive folder
 def move_video_safely(video_file):
-    new_path = os.path.join(uploaded_folder, os.path.basename(video_file))
-    shutil.move(video_file, new_path)
-    send_telegram_message(f"✅ Moved {video_file} to {uploaded_folder}")
-
+    try:
+        new_path = os.path.join(uploaded_folder, os.path.basename(video_file))
+        shutil.move(video_file, new_path)
+        send_telegram_message(f"✅ Moved {video_file} to {uploaded_folder}")
+    except Exception as e:
+        send_telegram_message("Error movinf file from upload folder to Uploaded Folder")
 # Delete uploaded video after moving
 def delete_duplicate_video(video_file):
-    os.remove(video_file)
-    send_telegram_message(f"✅ Removed {video_file} from {video_folder}")
+    try:
+        os.remove(video_file)
+        send_telegram_message(f"✅ Removed {video_file} from {video_folder}")
+    except Exception as e:
+        send_telegram_message("Error deleting the uploaded file")
 
 # Function to schedule YouTube video upload
 def schedule_upload(video_file, title, description, tags, scheduled_time):
@@ -84,14 +90,10 @@ def schedule_upload(video_file, title, description, tags, scheduled_time):
         send_telegram_message(message)
         print(message)
 
-        move_video_safely(video_file)
-        time.sleep(2)
-        delete_duplicate_video(video_file)
-
     except Exception as e:
         error_message = f"venu: Error uploading {title}: {e}"
         send_telegram_message(error_message)
-        print(error_message, (TELEGRAM_BOT_TOKEN, int(TELEGRAM_CHAT_ID)+56566))
+        
 
 # Function to get the scheduled upload time
 def get_scheduled_time(hour, minute):
@@ -104,12 +106,12 @@ def get_scheduled_time(hour, minute):
 # Upload the first video in the list
 if len(video_files) >= 1:
     schedule_upload(
-        os.path.join(video_folder, video_files[0]), 
+        video_file=video_file, 
         title=os.path.splitext(video_files[0])[0], 
         description="🔥 A powerful motivational video to ignite your inner strength. 💪✨", 
         tags=["motivation", "success", "life"],  # Modify tags as needed
         scheduled_time=get_scheduled_time(8, 0)
     )
-    time.sleep(2)
-
-send_telegram_message("✅ Video Schedules for next day.")
+    move_video_safely(video_file)
+    time.sleep(10)
+    delete_duplicate_video(video_file)
