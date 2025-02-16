@@ -63,7 +63,9 @@ def delete_duplicate_video(video_file):
         os.remove(video_file)
         send_telegram_message(f"✅ Removed {video_file} from {video_folder}")
     except Exception as e:
-        send_telegram_message("Error deleting the uploaded file")
+        message = f"Error deleting the uploaded file, {e}"
+        send_telegram_message(message=message)
+        print(message)
 
 # Function to schedule YouTube video upload
 def schedule_upload(video_file, title, description, tags, scheduled_time):
