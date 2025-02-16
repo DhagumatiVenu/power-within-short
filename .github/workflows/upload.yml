@@ -40,8 +40,11 @@ jobs:
       - name: List Files Before Upload
         run: ls -R upload_videos || echo "No videos found!"
 
-      - name: Run upload script
+      - name: Run auto_upload.py script
         run: python auto_upload.py
+
+      - name: Run remove_in_upload.py script
+        run: python remove_upload.py
 
       - name: Commit and Push Changes
         run: |

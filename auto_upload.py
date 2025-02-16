@@ -6,10 +6,10 @@ import googleapiclient.errors
 import googleapiclient.http
 import google_auth_oauthlib.flow
 from google.oauth2.credentials import Credentials
+from titles import tags_comma_format, tags_hashtag_format
 import pytz
 import requests
 import shutil
-import json
 
 # Load YouTube Credentials from GitHub Secrets
 CREDENTIALS_FILE = "credentials.json"
@@ -56,16 +56,7 @@ def move_video_safely(video_file):
         shutil.move(video_file, new_path)
         send_telegram_message(f"✅ Moved {video_file} to {uploaded_folder}")
     except Exception as e:
-        send_telegram_message("Error movinf file from upload folder to Uploaded Folder")
-# Delete uploaded video after moving
-def delete_duplicate_video(video_file):
-    try:
-        os.remove(video_file)
-        send_telegram_message(f"✅ Removed {video_file} from {video_folder}")
-    except Exception as e:
-        message = f"Error deleting the uploaded file, {e}"
-        send_telegram_message(message=message)
-        print(message)
+        send_telegram_message(f"❌ Error moving {video_file} to {uploaded_folder}")
 
 # Function to schedule YouTube video upload
 def schedule_upload(video_file, title, description, tags, scheduled_time):
@@ -73,7 +64,7 @@ def schedule_upload(video_file, title, description, tags, scheduled_time):
         request_body = {
             "snippet": {
                 "title": title,
-                "description": description,
+                "description": description+" "+tags_hashtag_format,
                 "tags": tags,
                 "categoryId": "22",
             },
@@ -111,9 +102,8 @@ if len(video_files) >= 1:
         video_file=video_file, 
         title=os.path.splitext(video_files[0])[0], 
         description="🔥 A powerful motivational video to ignite your inner strength. 💪✨", 
-        tags=["motivation", "success", "life"],  # Modify tags as needed
+        tags=tags_comma_format,  # Modify tags as needed
         scheduled_time=get_scheduled_time(8, 0)
     )
     move_video_safely(video_file)
-    time.sleep(10)
-    delete_duplicate_video(video_file)
+    
