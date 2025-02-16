@@ -89,8 +89,9 @@ def schedule_upload(video_file, title, description, tags, scheduled_time):
         delete_duplicate_video(video_file)
 
     except Exception as e:
-        error_message = f"⚠ Error uploading {title}: {e}"
+        error_message = f"venu: Error uploading {title}: {e}"
         send_telegram_message(error_message)
+        print(TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)
         print(error_message)
 
 # Function to get the scheduled upload time
