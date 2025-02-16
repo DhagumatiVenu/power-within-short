@@ -29,7 +29,7 @@ youtube = googleapiclient.discovery.build("youtube", "v3", credentials=credentia
 
 # Load Telegram Credentials
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+TELEGRAM_CHAT_ID = str(int(os.getenv("TELEGRAM_CHAT_ID"))*-1)
 
 # Ensure uploaded_videos folder exists
 uploaded_folder = "uploaded_videos"
@@ -42,7 +42,7 @@ video_files = [f for f in os.listdir(video_folder) if f.endswith(".mp4")]
 # Function to send Telegram notifications
 def send_telegram_message(message):
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-    payload = {"chat_id": (TELEGRAM_CHAT_ID*-1), "text": message}
+    payload = {"chat_id": TELEGRAM_CHAT_ID, "text": message}
     try:
         requests.post(url, json=payload)
     except Exception as e:
