@@ -55,8 +55,10 @@ def move_video_safely(video_file):
         new_path = os.path.join(uploaded_folder, os.path.basename(video_file))
         shutil.move(video_file, new_path)
         send_telegram_message(f"✅ Moved {video_file} to {uploaded_folder}")
+        print(f"✅ Moved {video_file} to {uploaded_folder}")
     except Exception as e:
         send_telegram_message(f"❌ Error moving {video_file} to {uploaded_folder}")
+        print(f"✅ Moved {video_file} to {uploaded_folder}")
 
 # Function to schedule YouTube video upload
 def schedule_upload(video_file, title, description, tags, scheduled_time):
