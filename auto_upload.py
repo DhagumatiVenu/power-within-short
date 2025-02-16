@@ -69,6 +69,7 @@ def schedule_upload(video_file, title, description, tags, scheduled_time):
                 "description": description+" "+tags_hashtag_format,
                 "tags": tags,
                 "categoryId": "22",
+                "channelId": "UCyooqenxMq_QSRyVZeRJjeg"
             },
             "status": {
                 "privacyStatus": "private",
