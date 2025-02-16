@@ -39,8 +39,17 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Ignore .pyc files to prevent merge conflicts
+          echo "__pycache__/" >> .gitignore
+          echo "*.pyc" >> .gitignore
+          
+          git add .gitignore  # ✅ Ensure Git ignores unnecessary files
           git add -A
           git commit -m "Moved uploaded videos to archive" || echo "No changes to commit"
-          git pull --rebase origin main  # ✅ Pull latest changes to avoid conflicts
+          
+          # Fetch latest changes and resolve conflicts automatically
+          git pull --rebase --strategy-option=theirs origin main || git rebase --skip
+          
           git push origin main
 
