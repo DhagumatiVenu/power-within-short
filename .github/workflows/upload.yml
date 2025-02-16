@@ -32,14 +32,6 @@ jobs:
       - name: Create `credentials.json`
         run: echo '${{ secrets.YOUTUBE_CREDENTIALS }}' > credentials.json
 
-      - name: Ensure `upload_videos` and `uploaded_videos` Folders Exist
-        run: |
-          mkdir -p upload_videos
-          mkdir -p uploaded_videos
-
-      - name: List Files Before Upload
-        run: ls -R upload_videos || echo "No videos found!"
-
       - name: Run auto_upload.py script
         run: python auto_upload.py
 
