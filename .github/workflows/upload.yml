@@ -2,7 +2,7 @@ name: Run Python Script Daily
 
 on:
   schedule:
-    - cron: '0 8 * * *' # Runs daily at 8 AM UTC
+    - cron: '0 8 * * *'  # Runs daily at 8 AM UTC
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
@@ -13,12 +13,10 @@ jobs:
     steps:
       - name: Checkout repository manually
         run: git clone https://github.com/DhagumatiVenu/power-within-short.git .
-        with:
-          persist-credentials: true  # ✅ Ensures changes can be pushed back
-      
+
       - name: Set up Python manually
-        run: sudo apt update && sudo apt install python3 python3-pip -y
-      
+        run: sudo apt update && sudo apt install -y python3 python3-pip
+
       - name: Install dependencies
         run: pip install -r requirements.txt
 
@@ -36,22 +34,22 @@ jobs:
       - name: Debug Time Check
         run: date -u
 
-
       - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Ignore .pyc files to prevent merge conflicts
+          git config pull.rebase false  # ✅ Prevents rebase errors
+
+          # Ignore unwanted files
           echo "__pycache__/" >> .gitignore
           echo "*.pyc" >> .gitignore
-          
-          git add .gitignore  # ✅ Ensure Git ignores unnecessary files
+
+          git add .gitignore
           git add -A
           git commit -m "Moved uploaded videos to archive" || echo "No changes to commit"
-          
-          # Fetch latest changes and resolve conflicts automatically
-          git pull --rebase --strategy-option=theirs origin main || git rebase --skip
-          
-          git push origin main
 
+          # Pull latest changes to avoid conflicts
+          git pull --rebase origin main || git rebase --skip
+
+          # Push only if there are new commits
+          git push origin main || echo "No new changes to push"
