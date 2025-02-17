@@ -35,6 +35,10 @@ jobs:
       - name: Run auto_upload.py script
         run: python auto_upload.py
 
+      - name: Debug Time Check
+        run: date -u
+
+
       - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
