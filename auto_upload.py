@@ -14,10 +14,7 @@ import shutil
 # Load YouTube Credentials from GitHub Secrets
 CREDENTIALS_FILE = "credentials.json"
 
-if os.path.exists(CREDENTIALS_FILE):
-    credentials = Credentials.from_authorized_user_file(CREDENTIALS_FILE)
-else:
-    raise Exception("⚠ Missing YouTube API credentials. Authenticate locally first.")
+credentials = Credentials.from_authorized_user_file(CREDENTIALS_FILE)
 
 # Initialize YouTube API
 youtube = googleapiclient.discovery.build("youtube", "v3", credentials=credentials)

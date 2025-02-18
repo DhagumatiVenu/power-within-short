@@ -29,9 +29,6 @@ jobs:
           echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> $GITHUB_ENV
           echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}" >> $GITHUB_ENV
 
-      - name: Create `credentials.json`
-        run: echo '${{ secrets.YOUTUBE_CREDENTIALS }}' > credentials.json
-
       - name: Run auto_upload.py script
         run: python auto_upload.py
 
