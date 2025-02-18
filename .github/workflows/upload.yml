@@ -1,8 +1,8 @@
-name: Run Python Script Daily
+name: Upload YouTube Video
 
 on:
   schedule:
-    - cron: '0 8 * * *'  # Runs daily at 8 AM UTC
+    - cron: '0 1 * * *'  # Runs at 01:01 UTC daily
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
@@ -10,16 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write  # ✅ Allows GitHub Actions to modify files in the repo
+
     steps:
-      - name: Checkout repository manually
-        run: git clone https://github.com/DhagumatiVenu/power-within-short.git .
-
-      - name: Set up Python manually
-        run: sudo apt update && sudo apt install -y python3 python3-pip
-
+      - name: Checkout the repository
+        uses: actions/checkout@v3  # ✅ Fetches the latest code
+      
+      - name: Load Python Environment
+        uses: actions/setup-python@v4  # ✅ Corrected action
+        with:
+          python-version: "3.10"
+      
       - name: Install dependencies
         run: pip install -r requirements.txt
-
+      
       - name: Set Environment Variables
         run: |
           echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> $GITHUB_ENV
@@ -31,25 +34,23 @@ jobs:
       - name: Run auto_upload.py script
         run: python auto_upload.py
 
-      - name: Debug Time Check
-        run: date -u
-
-      - name: Commit and Push Changes
+      - name: Configure Git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Commit Changes
+        run: |
+          git add -A
+          git commit -m "Automated commit from GitHub Actions" || echo "No changes to commit"
           git config pull.rebase false  # ✅ Prevents rebase errors
 
           # Ignore unwanted files
           echo "__pycache__/" >> .gitignore
           echo "*.pyc" >> .gitignore
-
-          git add .gitignore
-          git add -A
-          git commit -m "Moved uploaded videos to archive" || echo "No changes to commit"
-
-          # Pull latest changes to avoid conflicts
-          git pull --rebase origin main || git rebase --skip
-
-          # Push only if there are new commits
-          git push origin main || echo "No new changes to push"
+      
+      - name: Push Changes with GH_PAT
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/DhagumatiVenu/power-within-short.git main || echo "No new changes to push"
