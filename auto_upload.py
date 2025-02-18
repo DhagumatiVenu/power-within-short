@@ -13,11 +13,6 @@ import shutil
 
 # Load YouTube Credentials from GitHub Secrets
 CREDENTIALS_FILE = "credentials.json"
-YOUTUBE_CREDENTIALS_JSON = os.getenv("YOUTUBE_CREDENTIALS")
-
-if YOUTUBE_CREDENTIALS_JSON:
-    with open(CREDENTIALS_FILE, "w") as f:
-        f.write(YOUTUBE_CREDENTIALS_JSON)
 
 if os.path.exists(CREDENTIALS_FILE):
     credentials = Credentials.from_authorized_user_file(CREDENTIALS_FILE)
