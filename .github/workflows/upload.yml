@@ -13,8 +13,7 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: git clone https://github.com/DhagumatiVenu/power-within-short.git
-          cd power-within-short  # ✅ Fetches the latest code
+        uses: actions/checkout@v3  # ✅ Fetches the latest code
       
       - name: Load Python Environment
         uses: actions/setup-python@v4  # ✅ Corrected action
