@@ -2,7 +2,7 @@ name: Upload YouTube Video
 
 on:
   schedule:
-    - cron: '0 8 * * *'  # Runs at 8 AM UTC daily
+    - cron: '0 1 * * *'  # Runs at 01:01 UTC daily
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
@@ -12,17 +12,20 @@ jobs:
       contents: write  # ✅ Allows GitHub Actions to modify files in the repo
 
     steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v3  # ✅ Fetches the latest code
-      
-      - name: Load Python Environment
-        uses: actions/setup-python@v4  # ✅ Corrected action
-        with:
-          python-version: "3.10"
-      
+      - name: Clone repository manually
+        run: |
+          git clone https://github.com/DhagumatiVenu/power-within-short.git
+          cd power-within-short
+
+      - name: Install Python 3.10
+        run: |
+          sudo apt update
+          sudo apt install python3.10 python3-pip
+          python3.10 --version
+
       - name: Install dependencies
-        run: pip install -r requirements.txt
-      
+        run: pip3 install -r requirements.txt
+
       - name: Set Environment Variables
         run: |
           echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> $GITHUB_ENV
@@ -32,13 +35,13 @@ jobs:
         run: echo '${{ secrets.YOUTUBE_CREDENTIALS }}' > credentials.json
 
       - name: Run auto_upload.py script
-        run: python auto_upload.py
+        run: python3 auto_upload.py
 
       - name: Configure Git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-      
+
       - name: Commit Changes
         run: |
           git add -A
@@ -48,7 +51,7 @@ jobs:
           # Ignore unwanted files
           echo "__pycache__/" >> .gitignore
           echo "*.pyc" >> .gitignore
-      
+
       - name: Push Changes with GH_PAT
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
